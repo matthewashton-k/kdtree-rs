@@ -421,7 +421,7 @@ impl<A: Float + Zero + One, T, U: AsRef<[A]>> KdTree<A, T, U> {
     // === BOUNDING BOX ===
     // ============================================================================
 
-    pub fn bounding_box(&self, min_bounds: &[A], max_bounds: &[A]) -> Result<Vec<&T>, ErrorKind> {
+    pub fn bounding_box(&self, min_bounds: &[A], max_bounds: &[A]) -> Result<Vec<(&U, &T)>, ErrorKind> {
         self.check_point(min_bounds)?;
         self.check_point(max_bounds)?;
         if self.size == 0 {
@@ -436,7 +436,7 @@ impl<A: Float + Zero + One, T, U: AsRef<[A]>> KdTree<A, T, U> {
                 let bucket = curr.bucket.as_ref().unwrap().iter();
                 for (p, b) in points.zip(bucket) {
                     if Self::in_bounding_box(p.as_ref(), min_bounds, max_bounds) {
-                        evaluated.push(b);
+                        evaluated.push((p, b));
                     }
                 }
             } else {
